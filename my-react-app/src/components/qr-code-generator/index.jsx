@@ -1,10 +1,12 @@
 import { useState } from "react";
 import QRCode from "react-qr-code"
+import ColorPicker from "../other/ColorPicker"
 
 export default function QRCodeGenerator(){
 
     const [qrCode, setQrCode] = useState('');
     const [input, setInput] = useState('');
+    const [color, setColor] = useState("#4ae3e8"); // Initialize with the default color
 
     function handleGenerateQrCode(){
         setQrCode(input);
@@ -19,14 +21,19 @@ export default function QRCodeGenerator(){
                 type="text" name="qr-code"
                 value={input}
                 placeholder="Enter your value"/>
-                <button onClick={handleGenerateQrCode}>Generate</button>
+                
+                <div>
+                    <button onClick={handleGenerateQrCode}>Generate</button>
+                    <ColorPicker color={color} onColorChange={setColor}/>
+                </div>
             </div>
+
             <div>
                 <QRCode
                 id="qr-code-value"
                 value={qrCode}
                 size={400}
-                bgColor="white"
+                fgColor={color}
                 />
             </div>
         </div>
