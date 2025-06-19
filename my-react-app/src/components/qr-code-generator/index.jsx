@@ -1,13 +1,25 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import QRCode from "react-qr-code"
 import ColorPicker from "../other/ColorPicker"
 import { toPng } from 'html-to-image';
 
+const COLOR_KEY = 'qr_color';
+
 export default function QRCodeGenerator(){
+    // 读取localStorage中的颜色
+    const getInitialColor = () => {
+        return localStorage.getItem(COLOR_KEY) || "#4ae3e8";
+    };
+
     const [qrCode, setQrCode] = useState('');
     const [input, setInput] = useState('');
-    const [color, setColor] = useState("#4ae3e8"); // Initialize with the default color
+    const [color, setColor] = useState(getInitialColor());
     const qrRef = useRef(null);
+
+    // 颜色变化时保存到localStorage
+    useEffect(() => {
+        localStorage.setItem(COLOR_KEY, color);
+    }, [color]);
 
     function handleGenerateQrCode(){
         setQrCode(input);
@@ -46,10 +58,13 @@ export default function QRCodeGenerator(){
         <div>
             <div>
                 <h1>QR Code Generator</h1>
-                <input onChange={(e) => setInput(e.target.value)}
-                type="text" name="qr-code"
-                value={input}
-                placeholder="Enter your value"/>
+                <input 
+                    onChange={(e) => setInput(e.target.value)}
+                    type="text" 
+                    name="qr-code"
+                    value={input}
+                    placeholder="Enter your value"
+                />
                 
                 <div>
                     <button onClick={handleGenerateQrCode}>Generate</button>
@@ -73,6 +88,5 @@ export default function QRCodeGenerator(){
                 </div>
             </div>
         </div>
-        
     );
 }
